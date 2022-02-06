@@ -13,3 +13,8 @@ Tenha certeza de ter os seguintes requisitos:
 Após clonar o repositório na sua máquina, rode o seguinte comando na raíz de seu projeto:
 
 ```python3 mega_data.py```
+
+## Atenção:
+Em desenvolvimento
+## Atention:
+In development
