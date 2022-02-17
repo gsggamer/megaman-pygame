@@ -39,14 +39,17 @@ mbis_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-idle-shoot.png')).co
 mbi_rev_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-basic-idle-reverse.png')).convert_alpha()
 mbw_rev_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-basic-walk-reverse.png')).convert_alpha()
 mbj_rev_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-basic-jump-reverse.png')).convert_alpha()
+mbis_rev_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-idle-shoot-reverse.png')).convert_alpha()
 
-m_buster_ss = pygame.image.load(os.path.join(sprites_dir, 'mega-buster.png')).convert_alpha()
+m_buster_s = pygame.image.load(os.path.join(sprites_dir, 'mega-buster.png')).convert_alpha()
 
 
 
-ice_man_stage_song = pygame.mixer.music.load(os.path.join(sounds_dir, "ice-man.mp3"))
-pygame.mixer.music.play(100)
+ice_man_stage_song = pygame.mixer.music.load(os.path.join(sounds_dir, "ice-man-gg-cut.mp3"))
+pygame.mixer.music.play(999)
 
+
+all_shots = []
 
 
 
@@ -61,6 +64,7 @@ mega_y_limit = height - 150
         
 
 all_sprites = pygame.sprite.Group()
+all_bullets = pygame.sprite.Group()
 m_data = mega_data.Megaman()
 all_sprites.add(m_data)
 
@@ -99,10 +103,21 @@ while True:
                     m_data.shoot = True
                     shoot_sign = True
                     shoot_ind = 0
+                    b_data = mega_data.Megabuster()
+                    all_shots.append(b_data)
+                    for i in range(len(all_shots)):
+                        all_bullets.add(all_shots[i])
+                        
                 elif m_data.direction == "LEFT":
                     m_data.shoot = True
                     shoot_sign = True
                     shoot_ind = 0
+                    b_data = mega_data.Megabuster()
+                    all_shots.append(b_data)
+                    all_bullets.add(b_data)
+                    #all_sprites.add(b_data)
+
+                #print(all_shots)
                 
 
         if event.type == JOYAXISMOTION:
@@ -116,7 +131,16 @@ while True:
 
     all_sprites.draw(main_screen)
     all_sprites.update()
+    all_bullets.draw(main_screen)
+    all_bullets.update()
     m_data.x += axis_motion[0] * 3.9
+
+
+    for i in all_shots:
+        if i.x + i.w <= 50:
+            all_bullets.remove(i)
+            #all_sprites.remove(i)
+    
 
 
 
@@ -160,7 +184,6 @@ while True:
         m_data.jump = True
     else:
         m_data.jump = False
-
     
     
 

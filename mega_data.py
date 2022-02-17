@@ -31,13 +31,7 @@ class Megaman(pygame.sprite.Sprite):
         self.mega_jump_image = []
         self.mega_jump_rev_image = []
         self.mega_idle_shoot_image = []
-
-
-
-        mbuster = index.m_buster_ss.subsurface((0, 0), (35, 25))
-        mbuster = pygame.transform.scale(mbuster, (35*4, 25*4))
-        self.mega_buster_image = mbuster
-
+        self.mega_idle_shoot_rev_image = []
 
 
         for i in range(3):
@@ -71,6 +65,10 @@ class Megaman(pygame.sprite.Sprite):
             mbis_i = index.mbis_ss.subsurface((i * 31, 0), (31, 24))
             mbis_i = pygame.transform.scale(mbis_i, (31*3.2, 24*3.2))
             self.mega_idle_shoot_image.append(mbis_i)
+        for i in range(1):
+            mbis_r_i = index.mbis_rev_ss.subsurface((i * 31, 0), (31, 24))
+            mbis_r_i = pygame.transform.scale(mbis_r_i, (31*3.2, 24*3.2))
+            self.mega_idle_shoot_rev_image.append(mbis_r_i)
 
         
 
@@ -103,13 +101,13 @@ class Megaman(pygame.sprite.Sprite):
                 if self.jump == True:
                     self.image = self.mega_jump_rev_image[self.ind]
                 else:
-                    self.image = self.mega_bi_rev_images[self.ind]
+                    if self.shoot:
+                        self.image = self.mega_idle_shoot_rev_image[self.ind]
+                    else:
+                        self.image = self.mega_bi_rev_images[self.ind]
         
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
-
-        self.mbrect = self.mega_buster_image.get_rect()
-        self.mbrect.topleft = (100, 100)
 
     def update(self):
 
@@ -157,6 +155,48 @@ class Megaman(pygame.sprite.Sprite):
                 if self.jump == True:
                     self.image = self.mega_jump_rev_image[int(self.ind)]
                 else:
-                    self.image = self.mega_bi_rev_images[int(self.ind)]
+                    if self.shoot:
+                        self.image = self.mega_idle_shoot_rev_image[int(self.ind)]
+                    else:
+                        self.image = self.mega_bi_rev_images[int(self.ind)]
 
+        self.rect.topleft = (self.x, self.y)
+
+
+
+
+
+
+class Megabuster(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.velocity = 9
+        self.direction = "RIGHT"
+
+        self.w = 35 * 0.9
+        self.h = 25 * 0.9
+
+        if index.m_data.direction == "RIGHT":
+            self.x = index.m_data.x + index.m_data.w / 1
+        elif index.m_data.direction == "LEFT":
+            self.x = index.m_data.x
+        self.y = index.m_data.y + index.m_data.h / 3.2
+        self.image = index.m_buster_s.subsurface((0, 0), (35, 25))
+        self.image = pygame.transform.scale(self.image, (35 * 0.9, 25 * 0.9))
+
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)
+
+        if index.m_data.direction == "LEFT":
+            self.direction = "LEFT"
+        elif index.m_data.direction == "RIGHT":
+            self.direction = "RIGHT"
+
+    def update(self):
+        self.image = pygame.transform.scale(self.image, (35 * 0.9, 25 * 0.9))
+        if self.direction == "LEFT":
+            self.x -= self.velocity
+        elif self.direction == "RIGHT":
+            self.x += self.velocity
         self.rect.topleft = (self.x, self.y)
